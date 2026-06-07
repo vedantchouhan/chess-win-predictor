@@ -15,3 +15,7 @@ print("White rating:", games[0]['white']['rating'])
 print("Black rating:", games[0]['black']['rating'])
 print("Time class:", games[0]['time_class'])
 print("Rules:", games[0]['rules'])
+
+
+print(games[0]['pgn'][:500])
+print("\nECO:", games[0].get('eco', 'N/A'))

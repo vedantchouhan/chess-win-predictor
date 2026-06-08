@@ -9,7 +9,7 @@ our_username = "vedantchouhan"
 data = []
 
 def get_pgn_field(pgn, field):
-    match = re.search(f'\[{field} "(.+?)"\]', pgn)
+    match = re.search(rf'\[{field} "(.+?)"\]', pgn)
     return match.group(1) if match else None
 
 for game in games:

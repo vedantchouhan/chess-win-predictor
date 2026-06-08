@@ -1,14 +1,23 @@
 # ♟️ Chess Win Probability Predictor
 
-A machine learning model trained on **4,714 of my real chess.com games** to predict win probability based on game conditions.
+A machine learning model trained on **3,827 of my real chess.com games** to predict win probability based on game conditions.
 
 ## 🎯 What it does
 Given your rating, opponent rating, color, and time control — predicts your probability of winning based on historical patterns from real games.
 
 ## 📊 Model Performance
-- **Accuracy: 73.4%** on unseen games
-- Trained on personal chess data spanning 2021–2026
-- Peak rating: 1600 Rapid | Current Daily: 1705
+- **Accuracy: 79.1%** on unseen games
+- Trained on 3,827 personal chess.com games (rated 500+)
+- Spans 2021–2026 across all time controls
+- Peak rating: 1639 Rapid | Current Daily: 1705
+
+## 📈 Model Progression
+| Version | Accuracy | Changes |
+|---|---|---|
+| v1 | 73.4% | Basic features (rating, color, time) |
+| v2 | 76.2% | Added opening name + move count |
+| v3 | 78.4% | Filtered noisy low-rated games |
+| v4 | 79.1% | Hyperparameter tuning (final) |
 
 ## 🔍 Key Findings from My Games
 | Time Control | Win Rate |
@@ -18,7 +27,9 @@ Given your rating, opponent rating, color, and time control — predicts your pr
 | Blitz | 50% |
 | Bullet | 50% |
 
-- Rating difference is the strongest predictor **(46% feature importance)**
+- Rating difference is the strongest predictor **(38% feature importance)**
+- Move count is significant **(15% feature importance)** — longer games favor me
+- Opening choice matters **(9.5% feature importance)**
 - Playing white gives slight advantage **(53% vs 50%)**
 - Low draw rate **(2.4%)** — aggressive playing style
 
@@ -33,14 +44,14 @@ Given your rating, opponent rating, color, and time control — predicts your pr
 ```
 chess-win-predictor/
 │
-├── fetch_games.py       # Fetch game archive URLs from chess.com API
-├── download_games.py    # Download all games and save to JSON
-├── explore_data.py      # Explore raw game data structure
-├── prepare_data.py      # Clean and transform data into CSV
-├── visualize.py         # Generate analysis charts
-├── model.py             # Train and evaluate ML model
-├── predict.py           # Interactive win probability predictor
-└── chess_analysis.png   # Visual analysis of my chess patterns
+├── fetch_games.py          # Fetch game archive URLs from chess.com API
+├── download_games.py       # Download all games and save to JSON
+├── explore_data.py         # Explore raw game data structure
+├── prepare_data.py         # Clean and transform data into CSV
+├── visualize.py            # Generate analysis charts
+├── model.py                # Train and evaluate ML model
+├── predict.py              # Interactive win probability predictor
+└── chess_analysis.png      # Visual analysis of my chess patterns
 ```
 
 ## 🚀 How to Run
@@ -83,10 +94,10 @@ Verdict: You are FAVORED to win
 ```
 
 ## 📈 Future Improvements
-- Extract opening names from PGN data
-- Add move count as a feature
 - Build a web interface using Flask
-- Include piece activity and position features using python-chess
+- Add opponent's opening tendencies
+- Include position evaluation at move 10
+- Real-time prediction during live games
 
 ## 👤 Author
 **Vedant Chouhan**

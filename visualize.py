@@ -6,7 +6,6 @@ df = pd.read_csv("chess_data.csv")
 fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 fig.suptitle("Vedant's Chess Analysis", fontsize=16)
 
-# 1. Win/Loss/Draw distribution
 axes[0,0].pie(
     [df['outcome'].eq(1).sum(), df['outcome'].eq(0).sum(), df['outcome'].eq(0.5).sum()],
     labels=['Win', 'Loss', 'Draw'],

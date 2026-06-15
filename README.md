@@ -2,7 +2,7 @@
 
 A machine learning model trained on **3,827 of my real chess.com games** to predict win probability based on game conditions. Deployed as an interactive web app.
 
-## 🚀 Live Demo
+## 🚀 Live 
 **[chess-win-predictor.onrender.com](https://chess-win-predictor.onrender.com)**
 
 Note: hosted on free tier, first load may take 30-60 seconds if the app has been inactive.

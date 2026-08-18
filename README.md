@@ -1,107 +1,96 @@
-# ♟️ Chess Win Probability Predictor
 
-A machine learning model trained on **3,827 of my real chess.com games** to predict win probability based on game conditions. Deployed as an interactive web app.
+<div align="center">
 
-## 🚀 Live 
-**[chess-win-predictor.onrender.com](https://chess-win-predictor.onrender.com)**
+# ♟️ Chess Win Predictor
 
-Note: hosted on free tier, first load may take 30-60 seconds if the app has been inactive.
+[![Live App](https://img.shields.io/badge/Live_App-Play_Now-2ea44f?style=for-the-badge&logo=github)](https://vedantchouhan.github.io/chess-win-predictor/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 
-## 🎯 What it does
-Given your rating, opponent rating, color, time control, and opening, predicts your probability of winning based on patterns learned from real games.
+*An end-to-end Machine Learning web application trained on 3,827 real games from my personal Chess.com history to predict match outcomes before the first move is played.*
 
-## 📊 Model Performance
-- **Accuracy: 79.1%** on unseen games
-- Trained on 3,827 personal chess.com games (rated 500+)
-- Spans 2021–2026 across all time controls
-- Peak rating: 1639 Rapid | Current Daily: 1705
+</div>
 
-## 📈 Model Progression
-| Version | Accuracy | Changes |
-|---|---|---|
-| v1 | 73.4% | Basic features (rating, color, time) |
-| v2 | 76.2% | Added opening name + move count |
-| v3 | 78.4% | Filtered noisy low-rated games |
-| v4 | 79.1% | Hyperparameter tuning (final) |
+---
 
-## 🔍 Key Findings from My Games
-| Time Control | Win Rate |
-|---|---|
-| Daily | 65% |
-| Rapid | 54% |
-| Blitz | 50% |
-| Bullet | 50% |
+## 🚀 Overview
 
-- Rating difference is the strongest predictor **(38% feature importance)**
-- Move count is significant **(15% feature importance)** — longer games favor me
-- Opening choice matters **(9.5% feature importance)**
-- Playing white gives slight advantage **(53% vs 50%)**
-- Low draw rate **(2.4%)** — aggressive playing style
+This project is a full-stack machine learning pipeline that answers one question: *Based on historical data, what is the exact probability I will win this specific chess match?*
 
-## 🛠️ Tech Stack
-- Python
-- Streamlit (web interface)
-- scikit-learn (Random Forest Classifier)
-- pandas
-- matplotlib
-- Chess.com Public API
-- Render (deployment)
+It evaluates pre-game parameters (my rating, opponent rating, time control, color, and opening) and serves live predictions through a decoupled web architecture.
 
-## 📁 Project Structure
-```
-chess-win-predictor/
-│
-├── streamlit_app.py        # Main web app (Streamlit UI + model)
-├── requirements.txt         # Python dependencies
-├── .streamlit/
-│   └── config.toml          # Theme configuration
-├── fetch_games.py            # Fetch game archive URLs from chess.com API
-├── download_games.py         # Download all games and save to JSON
-├── explore_data.py            # Explore raw game data structure
-├── prepare_data.py            # Clean and transform data into CSV
-├── visualize.py                # Generate analysis charts
-├── model.py                     # Train and evaluate ML model
-├── predict.py                    # CLI version of predictor
-└── chess_analysis.png            # Visual analysis of my chess patterns
-```
+**Key Metrics:**
+* **Dataset:** 3,827 personal Chess.com matches (extracted via Chess.com Public API).
+* **Model:** Gradient Boosting Classifier.
+* **True Accuracy:** **77.4%** on unseen test data.
 
-## 🚀 How to Run Locally
+---
 
-**1. Clone and install dependencies:**
-```bash
-git clone https://github.com/vedantchouhan/chess-win-predictor.git
-cd chess-win-predictor
-pip install -r requirements.txt
-```
+## 🧠 Machine Learning Engineering
 
-**2. Run the web app:**
-```bash
-streamlit run streamlit_app.py
-```
+### Model Evolution & Data Leakage Prevention
+Initial prototypes using a Random Forest algorithm achieved an artificially inflated 79.1% accuracy. Through feature importance analysis, I identified a severe **data leakage** issue: the model was relying heavily on `move_count`. Because a game's total move count cannot be known *before* a game starts, passing `move_count = 0` during live inference caused blind guessing.
 
-**3. (Optional) Use the CLI predictor:**
-```bash
-python predict.py
-```
+**The Fix:**
+1. Dropped the `move_count` feature to ensure strict pre-game temporal validity.
+2. Upgraded the algorithm to a **Gradient Boosting Classifier**, successfully recovering predictive power and achieving a mathematically sound **77.4% Test Accuracy** on purely pre-game variables.
 
-## 💡 Example Prediction
-```
-Your rating: 1152
-Opponent rating: 1000
-Color: white
-Time class: rapid
-Opening: London
+---
 
-Win Probability:  84.7%
-Loss Probability: 15.3%
-Verdict: You are FAVORED to win
-```
+## ⚙️ Architecture
 
-## 📈 Future Improvements
-- Add opponent's opening tendencies
-- Position evaluation features for deeper game analysis
-- Real-time prediction during live games
-- Game history tracking and trend visualization
+The application uses a modern, decoupled ML architecture to eliminate the "cold-start" latency commonly found in monolithic Streamlit deployments.
+
+    [Client Browser] <--> [GitHub Pages CDN]
+           |
+     (REST API JSON)
+           |
+    [FastAPI Backend] --> [Gradient Boosting Model .pkl]
+    (Hosted on Render)
+
+* **Frontend (GitHub Pages):** A lightweight, serverless HTML/JS interface that loads instantly (<1s) globally. Features live API-driven autocomplete for opening moves and dynamic rating difference calculators.
+* **Backend (Render):** A FastAPI REST service that loads the pre-trained `.pkl` model into memory on boot. This handles inference requests seamlessly without retraining the model, reducing latency from ~50 seconds (in the v1 Streamlit monolith) to milliseconds.
+
+---
+
+## 🛠️ Quickstart (Run Locally)
+
+Want to run the API and test the model on your own machine?
+
+**1. Clone the repository & install dependencies**
+
+    git clone https://github.com/vedantchouhan/chess-win-predictor.git
+    cd chess-win-predictor
+    pip install -r requirements.txt
+
+**2. Start the FastAPI Backend**
+
+    uvicorn main:app --reload
+
+*The API will boot up at `http://127.0.0.1:8000`. You can view the interactive Swagger docs at `http://127.0.0.1:8000/docs`.*
+
+**3. Launch the Frontend**
+Open a new terminal tab and start a local web server:
+
+    python3 -m http.server 3000
+
+*Navigate to `http://127.0.0.1:3000` in your browser to interact with the UI.*
+
+---
+
+## 📁 Repository Structure
+
+    chess-win-predictor/
+    ├── main.py                 # FastAPI backend entry point and inference routes
+    ├── train and save.py       # Data pipeline, model training, and .pkl generation
+    ├── index.html              # Frontend user interface and API integration logic
+    ├── requirements.txt        # Python dependencies
+    ├── chess_model.pkl         # Serialized Gradient Boosting model
+    ├── label_encoder.pkl       # Serialized encoder for chess openings
+    ├── download_games.py       # ETL script to fetch user history from Chess.com API
+    ├── prepare_data.py         # Data cleaning and feature engineering script
+    └── chess_data.csv          # Cleaned dataset of 3,827 games
 
 ## 👤 Author
 **Vedant Chouhan**

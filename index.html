@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Win Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 2rem 1rem;
+            background: linear-gradient(135deg, #0a0e1a 0%, #131829 50%, #0d1117 100%);
+            color: white; font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+        .container { max-width: 650px; margin: 0 auto; }
+        .chess-divider { text-align: center; font-size: 1.8rem; opacity: 0.6; margin-bottom: 0.5rem; }
+        .hero-title {
+            text-align: center; font-family: 'Space Grotesk', sans-serif; font-size: 3rem; margin: 0;
+            background: linear-gradient(135deg, #f0d9b5 0%, #d4a373 50%, #b58863 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle { text-align: center; color: #8b92a8; margin-bottom: 2rem; }
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+        .stat-tile { background: rgba(181, 136, 99, 0.08); border: 1px solid rgba(181, 136, 99, 0.2); border-radius: 14px; padding: 16px 8px; text-align: center; }
+        .stat-num { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: #f0d9b5; }
+        .stat-cap { font-size: 0.65rem; color: #6b7280; text-transform: uppercase; margin-top: 4px; letter-spacing: 1px; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 28px; }
+        .input-row { display: flex; gap: 16px; margin-bottom: 16px; }
+        .input-group { flex: 1; display: flex; flex-direction: column; }
+        label { color: #b58863; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        input, select { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: white; padding: 12px; font-family: 'Inter', sans-serif; outline: none; }
+        input:focus, select:focus { border-color: #b58863; }
+        select option { background: #131829; color: white; }
+        button { width: 100%; background: linear-gradient(135deg, #b58863 0%, #8b5e34 100%); color: white; border: none; border-radius: 12px; padding: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(181, 136, 99, 0.4); }
+        .results { display: none; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .bar-container { background: rgba(255, 255, 255, 0.05); border-radius: 8px; height: 28px; margin: 8px 0 16px; position: relative; overflow: hidden; }
+        .bar-fill { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; font-weight: 700; font-size: 0.85rem; transition: width 1s ease; width: 0%; }
+        .win-bar { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
+        .loss-bar { background: linear-gradient(90deg, #c62828, #ef5350); }
+        .verdict { text-align: center; padding: 16px; border-radius: 12px; font-weight: 700; font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="chess-divider">♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜</div>
+        <h1 class="hero-title">Chess Win Predictor</h1>
+        <p class="hero-subtitle">Machine learning model trained on 3,827 real games · 79.1% accuracy</p>
+
+        <div class="stat-grid">
+            <div class="stat-tile"><div class="stat-num">3,827</div><div class="stat-cap">Games</div></div>
+            <div class="stat-tile"><div class="stat-num">79.1%</div><div class="stat-cap">Accuracy</div></div>
+            <div class="stat-tile"><div class="stat-num">1639</div><div class="stat-cap">Peak Elo</div></div>
+            <div class="stat-tile"><div class="stat-num">51.6%</div><div class="stat-cap">Win Rate</div></div>
+        </div>
+
+        <div class="glass-card">
+            <form id="predictForm">
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Your Rating</label>
+                        <input type="number" id="our_rating" value="1152" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Opponent Rating</label>
+                        <input type="number" id="opp_rating" value="1000" required>
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Your Color</label>
+                        <select id="color">
+                            <option value="White">White</option>
+                            <option value="Black">Black</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Time Control</label>
+                        <select id="time_class">
+                            <option value="Rapid">Rapid</option>
+                            <option value="Blitz">Blitz</option>
+                            <option value="Bullet">Bullet</option>
+                            <option value="Daily">Daily</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Opening</label>
+                    <input type="text" id="opening" placeholder="e.g. Sicilian, French, Queens..." value="Sicilian">
+                </div>
+                <button type="submit" id="submitBtn">Predict Win Probability</button>
+            </form>
+
+            <div class="results" id="resultsArea">
+                <label style="text-align:center; display:block;">Prediction Result</label>
+                <div style="color:#8b92a8; font-size:0.85rem; font-weight:600;">Win</div>
+                <div class="bar-container"><div class="bar-fill win-bar" id="winBar"></div></div>
+                
+                <div style="color:#8b92a8; font-size:0.85rem; font-weight:600;">Loss</div>
+                <div class="bar-container"><div class="bar-fill loss-bar" id="lossBar"></div></div>
+
+                <div id="verdictBox" class="verdict"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NOTE: Replace this URL with your Render Backend URL once deployed
+        const API_URL = "http://127.0.0.1:8000/predict";
+
+        document.getElementById('predictForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "Analyzing...";
+
+            const payload = {
+                our_rating: parseInt(document.getElementById('our_rating').value),
+                opp_rating: parseInt(document.getElementById('opp_rating').value),
+                color: document.getElementById('color').value,
+                time_class: document.getElementById('time_class').value,
+                opening: document.getElementById('opening').value
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await response.json();
+                
+                document.getElementById('resultsArea').style.display = 'block';
+                
+                // Animate bars
+                setTimeout(() => {
+                    document.getElementById('winBar').style.width = data.win_prob + '%';
+                    document.getElementById('winBar').innerText = data.win_prob + '%';
+                    
+                    document.getElementById('lossBar').style.width = data.loss_prob + '%';
+                    document.getElementById('lossBar').innerText = data.loss_prob + '%';
+                }, 100);
+
+                // Set Verdict
+                const vBox = document.getElementById('verdictBox');
+                if (data.win_prob > 65) {
+                    vBox.innerHTML = '♔ You are favored to win';
+                    vBox.style.background = 'rgba(102, 187, 106, 0.15)';
+                    vBox.style.color = '#81c784';
+                    vBox.style.border = '1px solid rgba(102, 187, 106, 0.3)';
+                } else if (data.win_prob > 45) {
+                    vBox.innerHTML = '♞ Close game — could go either way';
+                    vBox.style.background = 'rgba(255, 213, 79, 0.15)';
+                    vBox.style.color = '#ffd54f';
+                    vBox.style.border = '1px solid rgba(255, 213, 79, 0.3)';
+                } else {
+                    vBox.innerHTML = '♚ Opponent is favored';
+                    vBox.style.background = 'rgba(239, 83, 80, 0.15)';
+                    vBox.style.color = '#ef9a9a';
+                    vBox.style.border = '1px solid rgba(239, 83, 80, 0.3)';
+                }
+
+            } catch (error) {
+                alert("Error connecting to prediction server. Ensure the backend is running.");
+            } finally {
+                btn.innerText = "Predict Win Probability";
+            }
+        });
+    </script>
+</body>
+</html>

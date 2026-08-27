@@ -78,7 +78,6 @@
       color: #f3f3f3; font-size: var(--nav); font-weight: 400; white-space: nowrap; transition: 0.35s ease;
     }
     #site-nav a:hover { border-color: rgba(235,235,235,0.9); box-shadow: 0 0 18px rgba(200,210,230,0.18); }
-    .header-cta { justify-self: end; }
     .burger { display: none; }
 
     /* BUTTONS */
@@ -91,8 +90,6 @@
     /* HERO */
     .hero { display: flex; align-items: flex-end; justify-content: center; padding: 8px 24px var(--hero-gap); min-height: 0; }
     .hero-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--copy-max); width: 100%; }
-    .badge { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 22px; padding: 9px 15px; border-radius: 5px; background: linear-gradient(90deg, #7d7d7d 0%, #2a2a2a 52%, #0a0a0a 100%); font-size: var(--badge); }
-    .badge svg { width: 18px; height: 20px; fill: white; }
     h1 { font-family: "Inter", sans-serif; font-size: var(--h1); font-weight: 500; letter-spacing: -0.045em; line-height: 1.12; color: #fff; display: flex; flex-direction: column; align-items: center; }
     .headline-line { display: block; overflow: hidden; padding: 0.06em 0.15em 0.14em; }
     h1 em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; font-size: 1.08em; color: var(--muted); }
@@ -129,13 +126,17 @@
     .autocomplete-items div:last-child { border-bottom: none; }
     .autocomplete-items div:hover, .autocomplete-active { background: rgba(255,255,255,0.1) !important; color: #fff; }
 
-    /* Results Animation */
+    /* Results Animation & Dynamic Highlighting */
     .results { display: none; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-soft); animation: fadeIn 0.5s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    
     .bar-container { background: rgba(255,255,255,0.08); border-radius: 6px; height: 26px; margin: 8px 0 20px; overflow: hidden; }
     .bar-fill { height: 100%; width: 0%; transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    .win-bar { background: #fff; }
-    .loss-bar { background: #444; }
+    
+    /* Dynamic Bar Colors */
+    .bar-highlight { background: #ffffff; box-shadow: 0 0 12px rgba(255,255,255,0.2); }
+    .bar-muted { background: rgba(255,255,255,0.15); }
+    
     .verdict { text-align: center; padding: 18px; border-radius: 8px; font-weight: 500; font-size: 1.05rem; margin-top: 12px; }
 
     /* Info Grid */
@@ -147,8 +148,8 @@
     /* MOBILE OVERRIDES */
     @media (max-width: 900px) {
       .header { grid-template-columns: 1fr auto auto; gap: 8px; padding-top: max(var(--header-y), env(safe-area-inset-top)); }
-      .logo, .header-cta, .burger { z-index: 80; }
-      .burger { display: grid; width: 42px; height: 42px; border-radius: 6px; border: 1px solid var(--border); background: rgba(8,8,8,0.55); cursor: pointer; place-content: center; gap: 5px; }
+      .logo, .burger { z-index: 80; }
+      .burger { display: grid; justify-self: end; width: 42px; height: 42px; border-radius: 6px; border: 1px solid var(--border); background: rgba(8,8,8,0.55); cursor: pointer; place-content: center; gap: 5px; }
       .burger span { display: block; width: 16px; height: 1.5px; border-radius: 1px; background: #fff; }
       .menu-backdrop { display: block; position: fixed; inset: 0; z-index: 40; background: rgba(8,8,8,0.42); opacity: 0; visibility: hidden; transition: 0.28s; }
       #site-nav { position: fixed; inset: 0; z-index: 45; flex-direction: column; justify-content: flex-start; gap: 12px; padding: 96px 22px 32px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: 0.28s; background: transparent; }
@@ -172,20 +173,16 @@
     .appear--scale { animation-name: in-scale; }
     .appear--soft { animation-name: in-soft; }
     .appear--mask { animation-name: in-mask; }
-    .appear--pop { animation-name: in-pop; }
     .appear--btn { animation-name: in-btn; }
     .appear--stat { animation-name: in-stat; }
 
     @keyframes in-scale { 0% { opacity: 0; transform: scale(0.84); } 100% { opacity: 1; transform: scale(1); } }
     @keyframes in-soft { 0% { opacity: 0; transform: translateY(14px); } 100% { opacity: 1; transform: translateY(0); } }
     @keyframes in-mask { 0% { opacity: 0; transform: translateY(40%); } 100% { opacity: 1; transform: translateY(0); } }
-    @keyframes in-pop { 0% { opacity: 0; transform: scale(0.9); } 70% { transform: scale(1.03); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
     @keyframes in-btn { 0% { opacity: 0; transform: translateY(18px) scale(0.94); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes in-stat { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
     
-    .badge-star { animation: in-star 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both; }
-    @keyframes in-star { 0% { transform: scale(0.2) rotate(-50deg); opacity: 0; } 65% { transform: scale(1.2) rotate(8deg); opacity: 1; } 100% { transform: scale(1) rotate(0); opacity: 1; } }
-    h1 em { animation: in-em 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.72s both; }
+    h1 em { animation: in-em 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.52s both; }
     @keyframes in-em { 0% { opacity: 0.35; filter: blur(4px); } 100% { opacity: 1; filter: blur(0); } }
   </style>
 </head>
@@ -211,8 +208,6 @@
             <a href="#deploy" class="appear appear--soft" style="--d: 0.52s">Deploy</a>
           </nav>
           
-          <a href="#analyze" class="btn btn-solid header-cta appear appear--scale" style="--d: 0.34s">Analyze Match</a>
-          
           <button class="burger appear appear--scale" style="--d: 0.34s" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
             <span></span><span></span><span></span>
           </button>
@@ -220,28 +215,25 @@
 
         <main class="hero" id="top">
           <div class="hero-copy">
-            <div class="badge appear appear--pop" style="--d: 0.22s">
-              <svg class="badge-star" viewBox="0 0 24 24"><path d="M12 2.6C12.55 2.6 12.88 3.15 13.08 4.7c.62 4.7 1.52 5.6 6.22 6.22 1.55.2 2.1.53 2.1 1.08s-.55.88-2.1 1.08c-4.7.62-5.6 1.52-6.22 6.22-.2 1.55-.53 2.1-1.08 2.1s-.88-.55-1.08-2.1c-.62-4.7-1.52-5.6-6.22-6.22C3.15 12.88 2.6 12.55 2.6 12s.55-.88 2.1-1.08c4.7-.62 5.6-1.52 6.22-6.22C11.12 3.15 11.45 2.6 12 2.6Z"/></svg>
-              Gradient Boosting Classifier
-            </div>
             
+            <!-- Timings shifted up to remove the gap left by the badge -->
             <h1>
-              <span class="headline-line"><span class="appear appear--mask" style="--d: 0.42s; display: block">Predict <em>match outcomes</em> before</span></span>
-              <span class="headline-line"><span class="appear appear--mask" style="--d: 0.62s; display: block">the first move is played.</span></span>
+              <span class="headline-line"><span class="appear appear--mask" style="--d: 0.22s; display: block">Predict <em>match outcomes</em> before</span></span>
+              <span class="headline-line"><span class="appear appear--mask" style="--d: 0.42s; display: block">the first move is played.</span></span>
             </h1>
             
-            <p class="lede appear appear--soft" style="--d: 0.82s; animation-duration: 1.25s">
+            <p class="lede appear appear--soft" style="--d: 0.62s; animation-duration: 1.25s">
               Deploy a high-accuracy ML pipeline trained on 3,827 real matches. Evaluates pre-game parameters to calculate true win probabilities instantly.
             </p>
             
             <div class="hero-actions">
-              <a href="#analyze" class="btn btn-solid appear appear--btn" style="--d: 0.96s">Analyze Match</a>
+              <a href="#analyze" class="btn btn-solid appear appear--btn" style="--d: 0.76s">Analyze Match</a>
             </div>
           </div>
         </main>
 
         <footer class="stats">
-          <div class="stat appear appear--stat" style="--d: 1.12s">
+          <div class="stat appear appear--stat" style="--d: 0.92s">
             <svg viewBox="0 0 24 24">
               <rect x="3.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#grad1)"/>
               <rect x="13.4" y="2.6" width="7.2" height="18.8" rx="3.6" fill="url(#grad2)"/>
@@ -253,14 +245,14 @@
             </svg>
             3,827 matches analyzed
           </div>
-          <div class="stat appear appear--stat" style="--d: 1.28s">
+          <div class="stat appear appear--stat" style="--d: 1.08s">
             <svg viewBox="0 0 24 24">
               <rect x="2.4" y="2.4" width="19.2" height="19.2" rx="6.2" fill="#ffffff"/>
               <path d="M12 7.1v7.4M8.15 12.35L12 16.2l3.85-3.85" stroke="#111" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             77.4% true test accuracy
           </div>
-          <div class="stat appear appear--stat" style="--d: 1.44s">
+          <div class="stat appear appear--stat" style="--d: 1.24s">
             <svg class="stat-icon-wide" viewBox="0 0 40 22">
               <circle cx="10.2" cy="11" r="9.2" fill="#2b2b2b"/><ellipse cx="10.2" cy="12.1" rx="4.15" ry="3.7" fill="#f4f4f4"/><circle cx="9" cy="11.4" r="0.7" fill="#1a1a1a"/><circle cx="11.4" cy="11.4" r="0.7" fill="#1a1a1a"/>
               <circle cx="20.2" cy="11" r="9.2" fill="#ffffff"/><circle cx="18.5" cy="10" r="1.7" fill="#111"/><circle cx="21.9" cy="10" r="1.7" fill="#111"/><path d="M18.8 14.5c.8.6 2 .6 2.8 0" stroke="#111" stroke-width="1.2" stroke-linecap="round" fill="none"/>
@@ -273,6 +265,7 @@
     
     <div class="scrolling-content">
       
+      <!-- Predictor Form Application -->
       <section id="analyze" class="glass-section">
         <div class="glass-panel">
           <h2>Analyze Matchup</h2>
@@ -318,6 +311,7 @@
             <button type="submit" id="submitBtn" class="btn btn-solid" style="width: 100%;">Run Inference</button>
           </form>
 
+          <!-- Dynamic Results Area -->
           <div class="results" id="resultsArea">
             <div style="font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; text-align: center;">Probability Forecast</div>
             
@@ -325,14 +319,14 @@
                 <span>Win</span><span id="winText">0%</span>
             </div>
             <div class="bar-container">
-                <div class="bar-fill win-bar" id="winBar"></div>
+                <div class="bar-fill" id="winBar"></div>
             </div>
 
             <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--muted);">
                 <span>Loss</span><span id="lossText">0%</span>
             </div>
             <div class="bar-container">
-                <div class="bar-fill loss-bar" id="lossBar"></div>
+                <div class="bar-fill" id="lossBar"></div>
             </div>
 
             <div id="verdictBox" class="verdict"></div>
@@ -340,6 +334,7 @@
         </div>
       </section>
 
+      <!-- Details & Architecture Cards -->
       <div class="info-grid">
         <section id="model" class="info-card">
           <h3>The Model</h3>
@@ -503,19 +498,36 @@
               const data = await response.json();
               
               const resultsArea = document.getElementById('resultsArea');
+              const winBar = document.getElementById('winBar');
+              const lossBar = document.getElementById('lossBar');
+              
               resultsArea.style.display = 'block';
               
-              document.getElementById('winBar').style.width = '0%';
-              document.getElementById('lossBar').style.width = '0%';
+              // Reset bars for animation
+              winBar.style.width = '0%';
+              lossBar.style.width = '0%';
+              winBar.className = 'bar-fill';
+              lossBar.className = 'bar-fill';
               
+              // Apply dynamic visual highlight to the higher probability
+              if (parseFloat(data.win_prob) >= parseFloat(data.loss_prob)) {
+                  winBar.classList.add('bar-highlight');
+                  lossBar.classList.add('bar-muted');
+              } else {
+                  winBar.classList.add('bar-muted');
+                  lossBar.classList.add('bar-highlight');
+              }
+              
+              // Trigger fill animation
               setTimeout(() => {
-                  document.getElementById('winBar').style.width = data.win_prob + '%';
+                  winBar.style.width = data.win_prob + '%';
                   document.getElementById('winText').innerText = data.win_prob + '%';
                   
-                  document.getElementById('lossBar').style.width = data.loss_prob + '%';
+                  lossBar.style.width = data.loss_prob + '%';
                   document.getElementById('lossText').innerText = data.loss_prob + '%';
               }, 50);
 
+              // Set dynamic verdict text
               const vBox = document.getElementById('verdictBox');
               if (data.win_prob >= 60) {
                   vBox.innerHTML = 'Favorable Matchup';

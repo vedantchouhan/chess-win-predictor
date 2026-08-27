@@ -73,6 +73,7 @@
     .logo-suffix { font-weight: 400; }
     #site-nav { display: flex; align-items: center; gap: 8px; justify-self: center; }
     #site-nav a {
+      display: inline-flex; align-items: center; justify-content: center; /* Centers the text vertically and horizontally */
       height: var(--nav-h); padding: 0 18px; border-radius: 7px; overflow: hidden; position: relative;
       border: 1px solid rgba(198,198,198,0.55); background: linear-gradient(105deg, #050505 0%, #2a2a2a 48%, #4a4a4a 100%);
       color: #f3f3f3; font-size: var(--nav); font-weight: 400; white-space: nowrap; transition: 0.35s ease;
@@ -90,10 +91,15 @@
     /* HERO */
     .hero { display: flex; align-items: flex-end; justify-content: center; padding: 8px 24px var(--hero-gap); min-height: 0; }
     .hero-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; max-width: var(--copy-max); width: 100%; }
-    h1 { font-family: "Inter", sans-serif; font-size: var(--h1); font-weight: 500; letter-spacing: -0.045em; line-height: 1.12; color: #fff; display: flex; flex-direction: column; align-items: center; }
+    
+    h1 { font-family: "Inter", sans-serif; font-size: var(--h1); font-weight: 500; letter-spacing: -0.045em; line-height: 1.12; color: #fff; display: flex; flex-direction: column; align-items: center; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
     .headline-line { display: block; overflow: hidden; padding: 0.06em 0.15em 0.14em; }
-    h1 em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; font-size: 1.08em; color: var(--muted); }
-    .lede { max-width: var(--lede-max); margin-top: 18px; color: var(--muted); font-size: var(--lede); line-height: 1.55; }
+    
+    /* Changed em to pure white */
+    h1 em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; font-size: 1.08em; color: #ffffff; }
+    
+    /* Brightened lede to light grey */
+    .lede { max-width: var(--lede-max); margin-top: 18px; color: #eaeaea; font-size: var(--lede); line-height: 1.55; text-shadow: 0 2px 8px rgba(0,0,0,0.5); font-weight: 400; }
     .hero-actions { margin-top: 26px; }
 
     /* STATS FOOTER */
@@ -216,7 +222,6 @@
         <main class="hero" id="top">
           <div class="hero-copy">
             
-            <!-- Timings shifted up to remove the gap left by the badge -->
             <h1>
               <span class="headline-line"><span class="appear appear--mask" style="--d: 0.22s; display: block">Predict <em>match outcomes</em> before</span></span>
               <span class="headline-line"><span class="appear appear--mask" style="--d: 0.42s; display: block">the first move is played.</span></span>

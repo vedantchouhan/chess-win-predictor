@@ -2,7 +2,7 @@
 
 # ♟️ Chess Win Predictor
 
-[![Live App](https://img.shields.io/badge/Deployment-Live_App-2ea44f?style=for-the-badge&logo=github)](https://vedantchouhan.github.io/chess-win-predictor/)
+[![Live App](https://img.shields.io/badge/Live_App-2ea44f?style=for-the-badge&logo=github)](https://vedantchouhan.github.io/chess-win-predictor/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
@@ -58,7 +58,39 @@ The application uses a modern, decoupled ML architecture to eliminate the "cold-
 Want to run the API and test the model on your own machine?
 
 **1. Clone the repository & install dependencies**
-```bash
-git clone [https://github.com/vedantchouhan/chess-win-predictor.git](https://github.com/vedantchouhan/chess-win-predictor.git)
-cd chess-win-predictor
-pip install -r requirements.txt
+
+    git clone https://github.com/vedantchouhan/chess-win-predictor.git
+    cd chess-win-predictor
+    pip install -r requirements.txt
+
+**2. Start the FastAPI Backend**
+
+    uvicorn main:app --reload
+
+*The API will boot up at `http://127.0.0.1:8000`. You can view the interactive Swagger docs at `http://127.0.0.1:8000/docs`.*
+
+**3. Launch the Frontend**
+Open a new terminal tab and start a local web server:
+
+    python3 -m http.server 3000
+
+*Navigate to `http://127.0.0.1:3000` in your browser to interact with the UI.*
+
+---
+
+## 📁 Repository Structure
+
+    chess-win-predictor/
+    ├── main.py                 # FastAPI backend entry point and inference routes
+    ├── train and save.py       # Data pipeline, model training, and .pkl generation
+    ├── index.html              # Unified frontend UI and API integration logic
+    ├── requirements.txt        # Python dependencies
+    ├── chess_model.pkl         # Serialized Gradient Boosting model
+    ├── label_encoder.pkl       # Serialized encoder for chess openings
+    ├── download_games.py       # ETL script to fetch user history from Chess.com API
+    ├── prepare_data.py         # Data cleaning and feature engineering script
+    └── chess_data.csv          # Cleaned dataset of 3,827 games
+
+## 👤 Author
+**Vedant Chouhan** B.Tech CSE (AI/ML) — UPES Dehradun  
+[chess.com/member/vedantchouhan](https://www.chess.com/member/vedantchouhan)

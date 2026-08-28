@@ -73,7 +73,7 @@
     .logo-suffix { font-weight: 400; }
     #site-nav { display: flex; align-items: center; gap: 8px; justify-self: center; }
     #site-nav a {
-      display: inline-flex; align-items: center; justify-content: center; /* Centers the text vertically and horizontally */
+      display: inline-flex; align-items: center; justify-content: center;
       height: var(--nav-h); padding: 0 18px; border-radius: 7px; overflow: hidden; position: relative;
       border: 1px solid rgba(198,198,198,0.55); background: linear-gradient(105deg, #050505 0%, #2a2a2a 48%, #4a4a4a 100%);
       color: #f3f3f3; font-size: var(--nav); font-weight: 400; white-space: nowrap; transition: 0.35s ease;
@@ -94,11 +94,7 @@
     
     h1 { font-family: "Inter", sans-serif; font-size: var(--h1); font-weight: 500; letter-spacing: -0.045em; line-height: 1.12; color: #fff; display: flex; flex-direction: column; align-items: center; text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
     .headline-line { display: block; overflow: hidden; padding: 0.06em 0.15em 0.14em; }
-    
-    /* Changed em to pure white */
     h1 em { font-family: "Instrument Serif", serif; font-style: italic; font-weight: 400; font-size: 1.08em; color: #ffffff; }
-    
-    /* Brightened lede to light grey */
     .lede { max-width: var(--lede-max); margin-top: 18px; color: #eaeaea; font-size: var(--lede); line-height: 1.55; text-shadow: 0 2px 8px rgba(0,0,0,0.5); font-weight: 400; }
     .hero-actions { margin-top: 26px; }
 
@@ -109,8 +105,14 @@
     .stat-icon-wide { width: 38px; height: 21px; }
 
     /* APPLICATION (GLASS CARDS) */
-    .scrolling-content { position: relative; z-index: 10; padding-bottom: 120px; }
-    .glass-section { padding: 60px 24px 24px; display: flex; justify-content: center; }
+    .scrolling-content { position: relative; z-index: 10; padding-top: 60px; padding-bottom: 60px; }
+    
+    /* Initially hide the Analyze section */
+    #analyze { display: none; }
+    #analyze.is-visible { display: flex; animation: fadeUpIn 0.6s ease forwards; }
+    @keyframes fadeUpIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+    .glass-section { padding: 0 24px 60px; justify-content: center; }
     .glass-panel { background: rgba(10, 10, 10, 0.45); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 48px; max-width: 680px; width: 100%; }
     .glass-panel h2 { font-size: 28px; font-weight: 500; margin-bottom: 32px; letter-spacing: -0.04em; }
     
@@ -138,8 +140,6 @@
     
     .bar-container { background: rgba(255,255,255,0.08); border-radius: 6px; height: 26px; margin: 8px 0 20px; overflow: hidden; }
     .bar-fill { height: 100%; width: 0%; transition: width 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
-    
-    /* Dynamic Bar Colors */
     .bar-highlight { background: #ffffff; box-shadow: 0 0 12px rgba(255,255,255,0.2); }
     .bar-muted { background: rgba(255,255,255,0.15); }
     
@@ -150,6 +150,13 @@
     .info-card { background: rgba(10, 10, 10, 0.45); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 16px; padding: 36px; }
     .info-card h3 { font-size: 20px; font-weight: 500; margin-bottom: 12px; color: #fff; }
     .info-card p { color: var(--muted); line-height: 1.55; font-size: 14.5px; }
+
+    /* CONTACT FOOTER */
+    .site-footer { text-align: center; margin-top: 80px; padding: 40px 24px; border-top: 1px solid var(--border-soft); }
+    .site-footer p { font-size: 14.5px; color: var(--muted); margin-bottom: 16px; font-weight: 400; }
+    .footer-links { display: flex; justify-content: center; gap: 24px; }
+    .footer-links a { color: #fff; font-size: 14.5px; font-weight: 500; text-decoration: none; transition: 0.2s; border-bottom: 1px solid transparent; }
+    .footer-links a:hover { color: #d8d8d8; border-color: rgba(255,255,255,0.4); }
 
     /* MOBILE OVERRIDES */
     @media (max-width: 900px) {
@@ -232,7 +239,7 @@
             </p>
             
             <div class="hero-actions">
-              <a href="#analyze" class="btn btn-solid appear appear--btn" style="--d: 0.76s">Analyze Match</a>
+              <a href="#analyze" id="trigger-analyze" class="btn btn-solid appear appear--btn" style="--d: 0.76s">Analyze Match</a>
             </div>
           </div>
         </main>
@@ -270,7 +277,7 @@
     
     <div class="scrolling-content">
       
-      <!-- Predictor Form Application -->
+      <!-- Predictor Form Application (Hidden until button is clicked) -->
       <section id="analyze" class="glass-section">
         <div class="glass-panel">
           <h2>Analyze Matchup</h2>
@@ -343,7 +350,7 @@
       <div class="info-grid">
         <section id="model" class="info-card">
           <h3>The Model</h3>
-          <p>Features a robust Gradient Boosting Classifier implemented via Scikit-Learn. Trained entirely on 3,827 curated Lichess matches to evaluate positionless pre-game parameters before the first move is ever played.</p>
+          <p>Features a robust Gradient Boosting Classifier implemented via Scikit-Learn. Trained entirely on 3,827 personal chess matches played on Chess.com to evaluate positionless pre-game parameters before the first move is ever played.</p>
         </section>
         <section id="architecture" class="info-card">
           <h3>Architecture</h3>
@@ -356,8 +363,19 @@
         <section id="deploy" class="info-card">
           <h3>Deployment</h3>
           <p>The Python ML inference engine is packaged into a stateless API layer. This allows for seamless, instantaneous deployment to cloud platforms like Azure App Service or Render with zero cold-start delay.</p>
+          <a href="https://github.com/vedantchouhan/chess-win-predictor" target="_blank" style="display: inline-block; margin-top: 16px; color: #fff; font-size: 14px; font-weight: 500; text-decoration: underline; text-underline-offset: 4px;">View Source on GitHub ↗</a>
         </section>
       </div>
+
+      <!-- Contact Footer -->
+      <footer class="site-footer">
+        <p>Built and engineered by Vedant Chouhan.</p>
+        <div class="footer-links">
+          <a href="https://github.com/vedantchouhan" target="_blank">GitHub</a>
+          <a href="https://linkedin.com/in/vedantchouhan" target="_blank">LinkedIn</a>
+          <a href="mailto:vedantchouhan@gmail.com">Email</a>
+        </div>
+      </footer>
 
     </div>
   </div>
@@ -379,7 +397,18 @@
       window.addEventListener('keydown', e => { if (e.key === 'Escape') { document.body.classList.remove('menu-open'); burger.setAttribute('aria-expanded', false); }});
       window.addEventListener('resize', () => { if (window.innerWidth >= 901) { document.body.classList.remove('menu-open'); burger.setAttribute('aria-expanded', false); }});
 
-      // 3. ACTUAL APP LOGIC FROM USER CODE
+      // 3. Interactive Reveal Logic (Hide/Show Analyze Form)
+      const triggerBtn = document.getElementById('trigger-analyze');
+      const analyzeSection = document.getElementById('analyze');
+      triggerBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          analyzeSection.classList.add('is-visible');
+          setTimeout(() => {
+              analyzeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 50);
+      });
+
+      // 4. ACTUAL APP LOGIC FROM USER CODE
       const API_URL = "https://chess-win-api.onrender.com";
       let validOpenings = [];
 
